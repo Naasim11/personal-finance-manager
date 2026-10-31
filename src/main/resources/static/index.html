@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ledger – Personal Finance Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <h1>Ledger</h1>
+  <div class="month-nav">
+    <button id="prevMonth" aria-label="Previous month">&lsaquo;</button>
+    <span id="monthLabel" aria-live="polite"></span>
+    <button id="nextMonth" aria-label="Next month">&rsaquo;</button>
+  </div>
+</header>
+
+<section class="summary" aria-label="Month summary">
+  <div><span class="label">Income</span><strong id="sumIncome" class="income">–</strong></div>
+  <div><span class="label">Expenses</span><strong id="sumExpense">–</strong></div>
+  <div class="net"><span class="label">Left this month</span><strong id="sumNet">–</strong></div>
+</section>
+
+<main class="layout">
+  <aside>
+    <section class="panel">
+      <h2 id="formTitle">Add transaction</h2>
+      <div class="seg" role="group" aria-label="Transaction type">
+        <button type="button" data-type="EXPENSE" class="on">Expense</button>
+        <button type="button" data-type="INCOME">Income</button>
+      </div>
+      <div class="fields">
+        <label>Category <select id="fCategory"></select></label>
+        <label>Amount (₹) <input id="fAmount" type="number" min="0.01" step="0.01" inputmode="decimal"></label>
+        <label>Date <input id="fDate" type="date"></label>
+        <label>Note <input id="fNote" type="text" maxlength="255" placeholder="Optional"></label>
+      </div>
+      <p id="formError" class="error" role="alert"></p>
+      <div class="row">
+        <button id="saveBtn" class="primary">Save transaction</button>
+        <button id="cancelEdit" class="ghost" hidden>Cancel edit</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Budgets</h2>
+        <button id="copyBudgets" class="ghost small">Copy from last month</button>
+      </div>
+      <div id="budgetList"></div>
+      <p id="budgetEmpty" class="empty" hidden>No budgets for this month. Set one below, or copy last month’s.</p>
+      <div class="budget-form">
+        <select id="bCategory" aria-label="Budget category"></select>
+        <input id="bLimit" type="number" min="1" step="1" placeholder="Limit (₹)" aria-label="Budget limit">
+        <button id="setBudget" class="ghost">Set budget</button>
+      </div>
+      <p id="budgetError" class="error" role="alert"></p>
+    </section>
+  </aside>
+
+  <div class="main-col">
+    <section class="charts">
+      <div class="panel">
+        <h2>Where the money went</h2>
+        <div class="chart-box"><canvas id="pieChart"></canvas></div>
+        <p id="pieEmpty" class="empty" hidden>No expenses recorded this month.</p>
+      </div>
+      <div class="panel">
+        <h2>Last six months</h2>
+        <div class="chart-box"><canvas id="barChart"></canvas></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Transaction history</h2></div>
+      <div class="filters">
+        <label>From <input id="fltFrom" type="date"></label>
+        <label>To <input id="fltTo" type="date"></label>
+        <label>Type
+          <select id="fltType"><option value="">All</option><option value="INCOME">Income</option><option value="EXPENSE">Expense</option></select>
+        </label>
+        <label>Category <select id="fltCategory"><option value="">All</option></select></label>
+        <button id="clearFilters" class="ghost small">Clear filters</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Category</th><th>Note</th><th class="num">Amount</th><th><span class="sr">Actions</span></th></tr></thead>
+          <tbody id="txnBody"></tbody>
+        </table>
+      </div>
+      <p id="txnEmpty" class="empty" hidden>No transactions match these filters.</p>
+      <div class="pager">
+        <button id="prevPage" class="ghost small">Previous</button>
+        <span id="pageInfo"></span>
+        <button id="nextPage" class="ghost small">Next</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
